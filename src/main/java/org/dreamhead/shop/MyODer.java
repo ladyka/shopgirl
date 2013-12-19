@@ -3,7 +3,7 @@ package org.dreamhead.shop;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-class MyODer implements Serializable {
+public class MyODer implements Serializable {
 	private static final long serialVersionUID = 816736889645L; 
 
 	private int id;

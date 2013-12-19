@@ -55,7 +55,7 @@ public class CartController {
 			oder.setAppUser(appUser);
 			oder.setDateodr(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 			oder.setPrice(new Price(Priceid));
-			oder.setStatus(1);
+			oder.setStatus(0);
 			BQD.M.saveOrUpdate(oder);
 			
 			model.addAttribute("rezult", "Добавлено");
