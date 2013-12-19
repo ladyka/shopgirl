@@ -1,5 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page session="false" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -32,6 +33,32 @@
       context.fillText('Каталог магазина женской одежды', x, y);
     </script>
     </a>
-
+    
+	<table>
+		<tr> 
+			<td>
+				Имя товара
+			</td>
+			<td>
+				Cтатус
+			</td>	
+			<td>
+				Время изменения
+			</td>		
+			<td>
+				Ссылка на товар
+			</td>			
+		</tr>
+		 <c:forEach var="element" items="${elements}">
+			<tr>
+				<td><c:out value="${element.name}"/></td>
+				<td><c:out value="${element.status}"/></td>
+				<td><c:out value="${element.timestamp}"/></td>
+				<td>
+					<a href="shipment/<c:out value="${element.id}"/>" >Перейти</a>
+				</td>
+			</tr> 
+		 </c:forEach> 
+	</table>
 </body>
 </html>

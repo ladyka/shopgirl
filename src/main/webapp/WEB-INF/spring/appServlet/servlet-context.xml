@@ -25,6 +25,7 @@
 	<context:component-scan base-package="org.dreamhead.shop" />
 	<context:component-scan base-package="org.dreamhead.shop.db" />
 	<context:component-scan base-package="org.dreamhead.shop.entity" />
+	<context:component-scan base-package="org.dreamhead.shop.security" />
 	
     <sec:global-method-security pre-post-annotations="enabled"/>
 

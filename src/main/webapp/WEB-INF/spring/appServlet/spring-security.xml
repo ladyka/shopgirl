@@ -20,8 +20,10 @@
         <intercept-url pattern="/category/**" access="permitAll"/>
         <intercept-url pattern="/" access="permitAll"/>
         <intercept-url pattern="/login" access="permitAll"/>
+        <intercept-url pattern="/register" access="permitAll"/>
+        <intercept-url pattern="/registerpage" access="permitAll"/>
 
-        <intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/cart/**" access="hasRole('ROLE_USER')"/>
         
         
         <form-login login-page="/login" authentication-failure-url="/login?error=true" default-target-url="/"/>

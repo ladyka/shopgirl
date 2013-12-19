@@ -6,19 +6,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.persistence.criteria.Order;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dreamhead.shop.db.BQD;
-import org.dreamhead.shop.db.BaseRequest;
 import org.dreamhead.shop.db.ParamHQL;
 import org.dreamhead.shop.entity.AppUser;
 import org.dreamhead.shop.entity.Oder;
 import org.dreamhead.shop.entity.Price;
-import org.dreamhead.shop.entity.Shipment;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,9 +42,16 @@ public class CartController {
 			BQD.M.saveOrUpdate(price);
 			
 			Oder oder = new Oder();
-			AppUser appUser = BQD.M.getListEntity(AppUser.class, 
-					new ParamHQL("email", principal.getName())
-					).get(0);
+			AppUser appUser = null;
+			try {
+				appUser = BQD.M.getListEntity(AppUser.class, 
+						new ParamHQL("email", principal.getName())
+						).get(0);
+			} catch (NullPointerException ex) {
+				logger.info("THIS is GUEST");
+				return "login";
+			}
+			
 			oder.setAppUser(appUser);
 			oder.setDateodr(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 			oder.setPrice(new Price(Priceid));
@@ -58,7 +62,26 @@ public class CartController {
 		} else {
 			model.addAttribute("rezult", "Товар закончился на складе, скоро будет.");
 		}
-		return "shipment";
+		return "rezult";
 	}
-
+	
+	@RequestMapping(value = "cart", produces = "text/plain;charset=UTF-8")
+	public String cart(Model model,Principal principal) {
+		List<MyODer> prices = new ArrayList<MyODer>();
+		AppUser appUser = BQD.M.getListEntity(AppUser.class,
+				new ParamHQL("email", principal.getName())).get(0);
+		List<Oder> list = appUser.getOders();
+		for (Oder oder : list) {
+			MyODer myODer = new MyODer(
+					oder.getPrice().getShipment().getId(),
+					oder.getPrice().getShipment().getName(),
+					oder.getStatus(),
+					oder.getDateodr());
+			prices.add(myODer);
+			logger.info(myODer);
+		}
+		model.addAttribute("elements", prices);
+		return "cart";
+	}
 }
+

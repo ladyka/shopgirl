@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.dreamhead.shop.db.BQD;
 import org.dreamhead.shop.db.BaseManager;
 import org.dreamhead.shop.db.BaseRequest;
+import org.dreamhead.shop.entity.AppUser;
 import org.dreamhead.shop.entity.Category;
+import org.dreamhead.shop.entity.SystemRole;
 
 /**
  * Handles requests for the application home page.
@@ -40,5 +42,41 @@ public class HomeController {
     public String getLoginPage(HttpServletRequest request) {
         return "login";
     }
+    
+    @RequestMapping(value = "register", method = RequestMethod.GET)
+    public String getRegister(HttpServletRequest request) {
+        return "register";
+    }
+    
+    @RequestMapping(value = "registerpage")
+    public String Register(
+    		String email,
+    		String nick,
+    		String phone,
+    		String password,
+    		Model model
+    		) {
+    	AppUser appUser = new AppUser();
+    	appUser.setActive(2);
+    	appUser.setEmail(email);
+    	appUser.setPassword(password);
+    	appUser.setPhone(phone);
+    	appUser.setNick(nick);
+    	BQD.M.save(appUser);
+    	
+    	SystemRole systemRole = BQD.M.getEntity(SystemRole.class, 1);
+    	List<AppUser> appUsers = systemRole.getAppUsers();
+    	appUsers.add(appUser);
+    	systemRole.setAppUsers(appUsers);
+    	
+//    	List<SystemRole> systemRoles = appUser.getSystemRoles();
+//    	systemRoles.add(systemRole);
+    	
+    	BQD.M.save(appUser);
+    	BQD.M.save(systemRole);
+    	model.addAttribute("rezult", "Зарегестрировался");
+        return "rezult";
+    }
+    
 	
 }

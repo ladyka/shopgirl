@@ -29,7 +29,7 @@
       context.font = '30pt Calibri';
       context.textAlign = 'center';
       context.fillStyle = 'blue';
-      context.fillText('Регистрация - Каталог магазина женской одежды', x, y);
+      context.fillText('Регистрация', x, y);
     </script>
     </a>
 

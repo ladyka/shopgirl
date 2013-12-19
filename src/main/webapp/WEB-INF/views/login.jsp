@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>login Page</title>
 </head>
 <body>
 <form method="post" action="j_spring_security_check">
@@ -13,5 +13,6 @@
 <input size="30" maxlength="32" id="accountpassword" type="password" name="j_password"/>
 <input alt="Sign In" type="submit"/>
 </form>
+<a href="register" >Или зарегестрируйтесь </a>
 </body>
 </html>
