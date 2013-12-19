@@ -1,6 +1,18 @@
+.project
+.settings/
+target
+.metadata
+.classpath
+.project 
+.settings  
+.springBeans
+.idea/
+
 *.class
 
 # Package Files #
 *.jar
 *.war
 *.ear
+
+dreamhead.mwb.bak

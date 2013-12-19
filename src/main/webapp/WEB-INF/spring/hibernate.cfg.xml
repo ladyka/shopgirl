@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+		<mapping class="org.dreamhead.shop.entity.AppUser" />
+		<mapping class="org.dreamhead.shop.entity.Category" />
+		<mapping class="org.dreamhead.shop.entity.Oder" />
+		<mapping class="org.dreamhead.shop.entity.Price" />
+		<mapping class="org.dreamhead.shop.entity.Repotr" />
+		<mapping class="org.dreamhead.shop.entity.Shipment" />
+		<mapping class="org.dreamhead.shop.entity.Shop" />
+		<mapping class="org.dreamhead.shop.entity.SystemRole" />
+	</session-factory>
+</hibernate-configuration>
