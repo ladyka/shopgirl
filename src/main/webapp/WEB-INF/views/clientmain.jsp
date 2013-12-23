@@ -1,11 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="false" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Корзина пользователя</title>
+<title>Операции над клиентами</title>
 <style>
    div {
     border: 1px solid black; /* Параметры рамки */
@@ -33,35 +33,15 @@
       context.fillText('Каталог магазина женской одежды', x, y);
     </script>
     </a>
-    
 	<table>
-		<tr> 
-			<td>
-				Имя товара
-			</td>
-			<td>
-				Cтатус
-			</td>	
-			<td>
-				Время изменения
-			</td>		
-			<td>
-				Ссылка на товар
-			</td>
-			<td>
-				Удалить из корзины
-			</td>				
-		</tr>
 		 <c:forEach var="element" items="${elements}">
 			<tr>
-				<td><c:out value="${element.name}"/></td>
+				<td><c:out value="${element.email}"/></td>
+				<td><c:out value="${element.nick}"/></td>
+				<td><c:out value="${element.phone}"/></td>
 				<td><c:out value="${element.status}"/></td>
-				<td><c:out value="${element.timestamp}"/></td>
 				<td>
-					<a href="shipment/<c:out value="${element.id}"/>" >Перейти</a>
-				</td>
-				<td>
-					<a href="cart/del/<c:out value="${element.oderid}"/>" >Удалить</a>
+					<a href="client/ban/<c:out value="${element.id}"/>" >Забанить</a>
 				</td>
 			</tr> 
 		 </c:forEach> 

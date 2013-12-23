@@ -10,8 +10,9 @@ public class MyODer implements Serializable {
 	private String name;
 	private String status;
 	private Timestamp timestamp;
+	private int oderid;
 	
-	public MyODer(int id,String name, int status,Timestamp timestamp) {
+	public MyODer(int id,String name, int status,Timestamp timestamp,int oder) {
 		setId(id);
 		setName(name);
 		switch (status) {
@@ -24,6 +25,7 @@ public class MyODer implements Serializable {
 			break;
 		}
 		setTimestamp(timestamp);
+		setOderid(oder);
 	}
 	
 	public int getId() {
@@ -59,6 +61,14 @@ public class MyODer implements Serializable {
 				+ (name != null ? "name=" + name + ", " : "")
 				+ (status != null ? "status=" + status + ", " : "")
 				+ (timestamp != null ? "timestamp=" + timestamp : "") + "]";
+	}
+
+	public int getOderid() {
+		return oderid;
+	}
+
+	public void setOderid(int oderid) {
+		this.oderid = oderid;
 	}
 	
 	

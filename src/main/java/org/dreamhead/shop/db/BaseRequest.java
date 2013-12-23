@@ -33,6 +33,28 @@ public class BaseRequest {
 		Category category = bm.getEntity(Category.class, CategoryId);
 		return category;
 	}
+
+	public List<Shipment> searchShipments(String searchquery) {
+		Criteria criteria = BQD.M.getCurrentSession().createCriteria(Shipment.class);
+		criteria.add(Restrictions.like("name", "%" + searchquery + "%"));
+		List<Shipment> dictionaries = null;
+		try {
+			dictionaries = (List<Shipment>) criteria.list(); 
+		} catch (Exception ex) {
+			dictionaries = new ArrayList<Shipment>();
+		}
+		
+		
+		Criteria criteria1 = BQD.M.getCurrentSession().createCriteria(Shipment.class);
+		criteria1.add(Restrictions.like("description", "%" + searchquery + "%"));
+		try {
+			dictionaries.addAll((List<Shipment>) criteria.list());
+		} catch (Exception ex) {
+			
+		}
+		
+		return dictionaries;
+	}
 	
 //	public static List<QFBaLocation> getBALocations(int qfformTemplate, int locationVariant) {
 //		try {

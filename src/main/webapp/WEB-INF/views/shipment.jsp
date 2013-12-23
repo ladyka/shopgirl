@@ -6,7 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><c:out value="${shipmentTitle}"/></title>
-  <style>
+<style>
    div {
     border: 1px solid black; /* Параметры рамки */
     padding: 5px; /* Поля вокруг текста */
@@ -15,13 +15,24 @@
    #left { text-align: left; }
    #right { text-align: right; }
    #center { text-align: center; }
-   .content {
-    width: 75%; /* Ширина слоя */
-    background: #fc0; /* Цвет фона */
    }
   </style>
 </head>
 <body>
+<a href="http://localhost:48080/shop-0.0.1/" >
+<div id="center"><canvas id="myCanvas" width="800" height="100" ></canvas></div>
+    <script>
+      var canvas = document.getElementById('myCanvas');
+      var context = canvas.getContext('2d');
+      var x = canvas.width / 2;
+      var y = canvas.height / 2;
+
+      context.font = '30pt Calibri';
+      context.textAlign = 'center';
+      context.fillStyle = 'blue';
+      context.fillText('Каталог магазина женской одежды', x, y);
+    </script>
+    </a>
 <div id="center">
 <h1><c:out value="${shipmentName}"/></h1>
 <img src="<c:out value="${shipment.imageURI}"/>" />

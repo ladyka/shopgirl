@@ -76,12 +76,40 @@ public class CartController {
 					oder.getPrice().getShipment().getId(),
 					oder.getPrice().getShipment().getName(),
 					oder.getStatus(),
-					oder.getDateodr());
+					oder.getDateodr(),
+					oder.getId());
 			prices.add(myODer);
 			logger.info(myODer);
 		}
 		model.addAttribute("elements", prices);
 		return "cart";
 	}
+	
+
+	@RequestMapping(value = "cart/del/{OderId}", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	public String delCart(
+			Model model,
+			@PathVariable(value = "OderId") int OderId,
+			Principal principal
+			
+		) {
+		try {
+			Oder oder = BQD.M.getEntity(Oder.class, OderId);
+			AppUser appUser = BQD.M.getListEntity(AppUser.class, 
+					new ParamHQL("email", principal.getName())
+					).get(0);
+			if (oder.getAppUser().getId() == appUser.getId()) {
+				BQD.M.delete(oder);
+				model.addAttribute("rezult", "Удалено");
+			} else {
+				model.addAttribute("rezult", "Не делайте глупостей, это не ваша покупка :) ");
+			}
+			
+		} catch (Exception ex) {
+			model.addAttribute("rezult", "Произошла ошибка, уже в курсе. Исправляем.");
+		}
+		return "rezult";
+	}
+	
 }
 

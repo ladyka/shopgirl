@@ -3,9 +3,12 @@ package org.dreamhead.shop;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Lob;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dreamhead.shop.db.BQD;
+import org.dreamhead.shop.entity.Category;
 import org.dreamhead.shop.entity.Price;
 import org.dreamhead.shop.entity.Shipment;
 import org.springframework.stereotype.Controller;
@@ -43,4 +46,37 @@ public class ShipmentController {
 		return "shipment";
 	}
 	
+	@RequestMapping(value = "shipmentaddpage", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	public String shipmentaddpage(
+			Model model
+		) {
+		return "addnewShipment";
+	}
+	
+	@RequestMapping(value = "shipmentadd", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	public String shipmentadd(
+			Model model,
+			int id,
+
+			String description,
+
+			String imageURI,
+
+			String name,
+			int catalogid
+		) {
+		Shipment shipment = null;
+		if (id == 0) {
+			shipment = new Shipment(); 
+		} else {
+			shipment = BQD.M.getEntity(Shipment.class, id);
+		}
+		shipment.setCategory(new Category(catalogid));
+		shipment.setImageURI(imageURI);
+		shipment.setName(name);
+		
+		BQD.M.saveOrUpdate(shipment);
+		model.addAttribute("rezult", "Выполнено успешно");
+		return "rezult";
+	}
 }
