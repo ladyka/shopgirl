@@ -27,7 +27,7 @@
         
         
         <form-login login-page="/login" authentication-failure-url="/login?error=true" default-target-url="/"/>
-        <logout logout-url="/logout" logout-success-url="/login" invalidate-session="true" delete-cookies="true"/>
+        <logout logout-url="/logout" logout-success-url="/" invalidate-session="true" delete-cookies="true" />
         <remember-me key="eiasKey" token-validity-seconds="864000" user-service-ref="userDetails"/>
 
     </http>
