@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import org.dreamhead.shop.db.BaseRequest;
 import org.dreamhead.shop.entity.Category;
 import org.dreamhead.shop.entity.Shipment;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -19,12 +20,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Transactional
 public class CategoryController {
 	
+	@Autowired
+	BaseRequest baseRequest;
+	
 	private Log logger = LogFactory.getLog(getClass());
 	
 	@RequestMapping(value = "category/{id}", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	public String home(Model model,
 			@PathVariable(value = "id") int id) {
-		Category category = new BaseRequest().getCategory(id);
+		Category category = baseRequest.getCategory(id);
 		model.addAttribute("categoryName", category.getNameCategory() );
 		List<Shipment> shipments = category.getShipments();
 		for (Shipment shipment : shipments) {

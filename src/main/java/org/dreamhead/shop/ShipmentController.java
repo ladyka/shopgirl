@@ -3,14 +3,14 @@ package org.dreamhead.shop;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Lob;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.dreamhead.shop.db.BQD;
+import org.dreamhead.shop.db.BaseManager;
+import org.dreamhead.shop.db.BaseRequest;
 import org.dreamhead.shop.entity.Category;
 import org.dreamhead.shop.entity.Price;
 import org.dreamhead.shop.entity.Shipment;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -22,6 +22,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class ShipmentController {
 
+	@Autowired
+	BaseRequest baseRequest;
+	
+	@Autowired
+	BaseManager baseManager;
+	
 	private Log logger = LogFactory.getLog(getClass());
 	
 	@RequestMapping(value = "shipment/{id}", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
@@ -29,7 +35,7 @@ public class ShipmentController {
 			Model model,
 			@PathVariable(value = "id") int id
 		) {
-		Shipment shipment = BQD.M.getEntity(Shipment.class, id);
+		Shipment shipment = baseManager.getEntity(Shipment.class, id);
 		model.addAttribute("shipment", shipment);
 		
 		model.addAttribute("shipmentName", shipment.getName());
@@ -69,13 +75,13 @@ public class ShipmentController {
 		if (id == 0) {
 			shipment = new Shipment(); 
 		} else {
-			shipment = BQD.M.getEntity(Shipment.class, id);
+			shipment = baseManager.getEntity(Shipment.class, id);
 		}
 		shipment.setCategory(new Category(catalogid));
 		shipment.setImageURI(imageURI);
 		shipment.setName(name);
 		
-		BQD.M.saveOrUpdate(shipment);
+		baseManager.saveOrUpdate(shipment);
 		model.addAttribute("rezult", "Выполнено успешно");
 		return "rezult";
 	}

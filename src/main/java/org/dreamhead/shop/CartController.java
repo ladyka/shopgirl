@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.dreamhead.shop.db.BQD;
-import org.dreamhead.shop.db.ParamHQL;
+import org.dreamhead.shop.db.BaseManager;
+import org.dreamhead.shop.db.BaseRequest;
 import org.dreamhead.shop.entity.AppUser;
 import org.dreamhead.shop.entity.Oder;
 import org.dreamhead.shop.entity.Price;
@@ -26,6 +26,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Transactional
 public class CartController {
 
+	@Autowired
+    BaseManager baseManager;
+	
+	@Autowired
+	BaseRequest baseRequest;
 
 	private Log logger = LogFactory.getLog(getClass());
 	
@@ -36,17 +41,15 @@ public class CartController {
 			Principal principal
 			
 		) {
-		Price price = BQD.M.getEntity(Price.class, Priceid);
+		Price price = baseManager.getEntity(Price.class, Priceid);
 		if (price.getCount() > 1) {
 			price.setCount(price.getCount()-1);
-			BQD.M.saveOrUpdate(price);
+			baseManager.saveOrUpdate(price);
 			
 			Oder oder = new Oder();
 			AppUser appUser = null;
 			try {
-				appUser = BQD.M.getListEntity(AppUser.class, 
-						new ParamHQL("email", principal.getName())
-						).get(0);
+				appUser = baseRequest.getAppUserFromEmail(principal.getName());
 			} catch (NullPointerException ex) {
 				logger.info("THIS is GUEST");
 				return "login";
@@ -56,7 +59,7 @@ public class CartController {
 			oder.setDateodr(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 			oder.setPrice(new Price(Priceid));
 			oder.setStatus(0);
-			BQD.M.saveOrUpdate(oder);
+			baseManager.saveOrUpdate(oder);
 			
 			model.addAttribute("rezult", "Добавлено");
 		} else {
@@ -68,8 +71,7 @@ public class CartController {
 	@RequestMapping(value = "cart", produces = "text/plain;charset=UTF-8")
 	public String cart(Model model,Principal principal) {
 		List<MyODer> prices = new ArrayList<MyODer>();
-		AppUser appUser = BQD.M.getListEntity(AppUser.class,
-				new ParamHQL("email", principal.getName())).get(0);
+		AppUser appUser = baseRequest.getAppUserFromEmail(principal.getName()); 
 		List<Oder> list = appUser.getOders();
 		for (Oder oder : list) {
 			MyODer myODer = new MyODer(
@@ -90,16 +92,13 @@ public class CartController {
 	public String delCart(
 			Model model,
 			@PathVariable(value = "OderId") int OderId,
-			Principal principal
-			
+			Principal principal		
 		) {
 		try {
-			Oder oder = BQD.M.getEntity(Oder.class, OderId);
-			AppUser appUser = BQD.M.getListEntity(AppUser.class, 
-					new ParamHQL("email", principal.getName())
-					).get(0);
+			Oder oder = baseManager.getEntity(Oder.class, OderId);
+			AppUser appUser = baseRequest.getAppUserFromEmail(principal.getName());
 			if (oder.getAppUser().getId() == appUser.getId()) {
-				BQD.M.delete(oder);
+				baseManager.delete(oder);
 				model.addAttribute("rezult", "Удалено");
 			} else {
 				model.addAttribute("rezult", "Не делайте глупостей, это не ваша покупка :) ");

@@ -4,38 +4,42 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.dreamhead.shop.entity.AppUser;
 import org.dreamhead.shop.entity.Category;
 import org.dreamhead.shop.entity.Shipment;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
+@Service
 public class BaseRequest {
 
 	private SimpleDateFormat dateFormaterDATETIME = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	private BaseManager bm;
 	
-	public BaseRequest() {
-		 bm = BQD.M;
-	}
+	@Autowired
+	BaseManager baseKernel;
+	
 	
 	public List<Category> getCategories() {
-		return bm.getListEntity(Category.class);
+		return baseKernel.getListEntity(Category.class);
 	}
 
 	public List<Shipment> getShipments(int CategoryId) {
-		Category category = bm.getEntity(Category.class, CategoryId);
+		Category category = baseKernel.getEntity(Category.class, CategoryId);
 		return category.getShipments();
 	}
 
 	public Category getCategory(int CategoryId) {
-		Category category = bm.getEntity(Category.class, CategoryId);
+		Category category = baseKernel.getEntity(Category.class, CategoryId);
 		return category;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Shipment> searchShipments(String searchquery) {
-		Criteria criteria = BQD.M.getCurrentSession().createCriteria(Shipment.class);
+		Criteria criteria = baseKernel.getCurrentSession().createCriteria(Shipment.class);
 		criteria.add(Restrictions.like("name", "%" + searchquery + "%"));
 		List<Shipment> dictionaries = null;
 		try {
@@ -45,7 +49,7 @@ public class BaseRequest {
 		}
 		
 		
-		Criteria criteria1 = BQD.M.getCurrentSession().createCriteria(Shipment.class);
+		Criteria criteria1 = baseKernel.getCurrentSession().createCriteria(Shipment.class);
 		criteria1.add(Restrictions.like("description", "%" + searchquery + "%"));
 		try {
 			dictionaries.addAll((List<Shipment>) criteria.list());
@@ -56,33 +60,17 @@ public class BaseRequest {
 		return dictionaries;
 	}
 	
-//	public static List<QFBaLocation> getBALocations(int qfformTemplate, int locationVariant) {
-//		try {
-//			return BQD.M.getListEntity(QFBaLocation.class,
-//					new ParamHQL("qfformTemplate", qfformTemplate),
-//					new ParamHQL("locationVariant", locationVariant)
-//			);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return new ArrayList<QFBaLocation>();
-//		}
-//	}
-//
-//	public List<QFDictionary> findQFDictionary(String name) {
-//		Criteria criteria = BQD.M.getCurrentSession().createCriteria(QFDictionary.class);
-//		criteria.add(Restrictions.like("nameDictionary", "%" + name + "%"));
-//		List<QFDictionary> dictionaries = (List<QFDictionary>) criteria.list();
-//		return dictionaries;
-//	}
-//
-//	public List<QFAncillaryData> findQFAncillaryData(String dataValue,
-//			int dictionaryId) {
-//		Criteria criteria = BQD.M.getCurrentSession().createCriteria(QFDictionary.class);
-//		criteria.add(Restrictions.like("dataValue", "%" + dataValue + "%"));
-//		criteria.add(Restrictions.like("qfdictionary", new QFDictionary(dictionaryId)));
-//		List<QFAncillaryData> dictionaries = (List<QFAncillaryData>) criteria.list();
-//		return dictionaries;
-//	}
+	public AppUser getAppUserFromEmail(String email) {
+		try {
+			Criteria criteria = baseKernel.getCriteria(AppUser.class);
+			criteria.add(Restrictions.like("email",email));
+			return (AppUser) criteria.uniqueResult();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return baseKernel.getEntity(AppUser.class, 3);
+		}
+	}
+	
 
 
 }

@@ -3,7 +3,7 @@
 <%@ page session="false" %>
 <html>
 <head>
-	<title>Магазин женской одежды</title>
+	<title>DREAMHEAD.RU | Магазин женской одежды</title>
 <style>
    div {
     border: 1px solid black; /* Параметры рамки */
@@ -17,7 +17,7 @@
   </style>
 </head>
 <body>
-<a href="http://localhost:48080/shop-0.0.1/" >
+<a href="/store/" >
 <div id="center"><canvas id="myCanvas" width="800" height="100" ></canvas></div>
     <script>
       var canvas = document.getElementById('myCanvas');
@@ -28,9 +28,23 @@
       context.font = '30pt Calibri';
       context.textAlign = 'center';
       context.fillStyle = 'blue';
-      context.fillText('Каталог магазина женской одежды', x, y);
+      context.fillText('DREAMHEAD.RU', x, y);
     </script>
     </a>
+<p>
+<c:if test="${guest}">
+<p>
+Привет, Гость.<br>
+<a href="/store/register"  >Зарегистрируйся пожалуйста</a> или <a href="/store/login">войди</a>.
+
+</c:if>
+<c:if test="${user}">
+
+Привет. ${appUserName}.<br>
+<a href="/store/cabinet" >Личный кабинет</a>. <a href="/store/cart">Корзина</a>
+</c:if>
+
+</p>
 	<table>
 		<tr> 
 			<td>

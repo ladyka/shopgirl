@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dreamhead.shop.db.BaseRequest;
 import org.dreamhead.shop.entity.Shipment;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Transactional
 public class SearchController {
 
+	@Autowired
+	BaseRequest baseRequest;
+	
 	private Log logger = LogFactory.getLog(getClass());
 	
     @RequestMapping(value = "search")
@@ -25,7 +29,7 @@ public class SearchController {
     @RequestMapping(value = "searchrezult")
     public String searchrezult(Model model,String searchquery) {
     	StringBuilder builder = new StringBuilder();
-    	List<Shipment> shipments = new BaseRequest().searchShipments(searchquery);
+    	List<Shipment> shipments = baseRequest.searchShipments(searchquery);
     	builder.append("<table>");
     	for (Shipment shipment : shipments) {
 			builder.append(tabe(shipment));

@@ -1,5 +1,6 @@
 package org.dreamhead.shop;
 
+import java.security.Principal;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -12,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.dreamhead.shop.db.BQD;
 import org.dreamhead.shop.db.BaseManager;
 import org.dreamhead.shop.db.BaseRequest;
 import org.dreamhead.shop.entity.AppUser;
@@ -29,11 +29,20 @@ public class HomeController {
 	@Autowired
     BaseManager baseManager;
 	
+	@Autowired
+	BaseRequest baseRequest;
+	
 	@RequestMapping(value = "/", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
-	public String home(Model model) {
-		BQD.M = baseManager;
-		List<Category> categories = new BaseRequest().getCategories();
+	public String home(Model model,Principal principal) {
+		List<Category> categories = baseRequest.getCategories();
 		model.addAttribute("categories", categories );
+		try {
+			AppUser appUser = baseRequest.getAppUserFromEmail(principal.getName());
+			model.addAttribute("user", true);
+			model.addAttribute("appUserName", appUser.getNick());
+		} catch (NullPointerException exception) {
+			model.addAttribute("guest", true);
+		}
 		return "home";
 	}
 	
@@ -62,9 +71,9 @@ public class HomeController {
     	appUser.setPassword(password);
     	appUser.setPhone(phone);
     	appUser.setNick(nick);
-    	BQD.M.save(appUser);
+    	baseManager.save(appUser);
     	
-    	SystemRole systemRole = BQD.M.getEntity(SystemRole.class, 1);
+    	SystemRole systemRole = baseManager.getEntity(SystemRole.class, 1);
     	List<AppUser> appUsers = systemRole.getAppUsers();
     	appUsers.add(appUser);
     	systemRole.setAppUsers(appUsers);
@@ -72,8 +81,8 @@ public class HomeController {
 //    	List<SystemRole> systemRoles = appUser.getSystemRoles();
 //    	systemRoles.add(systemRole);
     	
-    	BQD.M.save(appUser);
-    	BQD.M.save(systemRole);
+    	baseManager.save(appUser);
+    	baseManager.save(systemRole);
     	model.addAttribute("rezult", "Зарегестрировался");
         return "rezult";
     }
