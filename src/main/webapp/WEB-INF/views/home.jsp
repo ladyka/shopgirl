@@ -43,8 +43,11 @@
 Привет. ${appUserName}.<br>
 <a href="/store/cabinet" >Личный кабинет</a>. <a href="/store/cart">Корзина</a> <a href="/store/logout" >Выйти</a>
 </c:if>
-
 </p>
+
+
+
+
 	<table>
 		<tr> 
 			<td>
