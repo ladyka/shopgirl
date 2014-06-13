@@ -14,6 +14,9 @@ import java.util.List;
 public class SystemRole implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	public static final int ADMIN = 1;
+	public static final int MANAGER = 2;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;

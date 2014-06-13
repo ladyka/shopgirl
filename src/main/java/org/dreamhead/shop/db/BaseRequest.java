@@ -70,7 +70,18 @@ public class BaseRequest {
 			return baseKernel.getEntity(AppUser.class, 3);
 		}
 	}
-	
 
+    public <T> T getEntity(Class<T> entityClass, int id) {
+        return baseKernel.getEntity(entityClass, id);
+    }
+    
+    
+	public Object saveOrUpdate(Object object) {
+		return baseKernel.saveOrUpdate(object);
+	}
+	
+	public Object save(Object object) {
+		return baseKernel.save(object);
+	}
 
 }

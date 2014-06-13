@@ -39,21 +39,41 @@ public class HomeController {
 		try {
 			AppUser appUser = baseRequest.getAppUserFromEmail(principal.getName());
 			model.addAttribute("user", true);
+			model.addAttribute("guest", false);
 			model.addAttribute("appUserName", appUser.getNick());
 		} catch (NullPointerException exception) {
 			model.addAttribute("guest", true);
+			model.addAttribute("user", false);
 		}
 		return "home";
 	}
 	
 
     @RequestMapping(value = "login", method = RequestMethod.GET)
-    public String getLoginPage(HttpServletRequest request) {
+    public String getLoginPage(HttpServletRequest request,Principal principal,Model model) {
+    	try {
+			AppUser appUser = baseRequest.getAppUserFromEmail(principal.getName());
+			model.addAttribute("user", true);
+			model.addAttribute("guest", false);
+			model.addAttribute("appUserName", appUser.getNick());
+		} catch (NullPointerException exception) {
+			model.addAttribute("guest", true);
+			model.addAttribute("user", false);
+		}
         return "login";
     }
     
     @RequestMapping(value = "register", method = RequestMethod.GET)
-    public String getRegister(HttpServletRequest request) {
+    public String getRegister(HttpServletRequest request,Principal principal,Model model) {
+    	try {
+			AppUser appUser = baseRequest.getAppUserFromEmail(principal.getName());
+			model.addAttribute("user", true);
+			model.addAttribute("guest", false);
+			model.addAttribute("appUserName", appUser.getNick());
+		} catch (NullPointerException exception) {
+			model.addAttribute("guest", true);
+			model.addAttribute("user", false);
+		}
         return "register";
     }
     
@@ -63,27 +83,36 @@ public class HomeController {
     		String nick,
     		String phone,
     		String password,
-    		Model model
+    		Model model,
+    		Principal principal
     		) {
-    	AppUser appUser = new AppUser();
-    	appUser.setActive(2);
-    	appUser.setEmail(email);
-    	appUser.setPassword(password);
-    	appUser.setPhone(phone);
-    	appUser.setNick(nick);
-    	baseManager.save(appUser);
+    	try {
+			AppUser appUser = baseRequest.getAppUserFromEmail(principal.getName());
+			model.addAttribute("user", true);
+			model.addAttribute("guest", false);
+			model.addAttribute("appUserName", appUser.getNick());
+			model.addAttribute("rezult", "Уже авторизовался, нет смысла регаться снова.");
+		} catch (NullPointerException exception) {
+			model.addAttribute("guest", true);
+			model.addAttribute("user", false);
+			AppUser appUser = new AppUser();
+	    	appUser.setActive(2);
+	    	appUser.setEmail(email);
+	    	appUser.setPassword(password);
+	    	appUser.setPhone(phone);
+	    	appUser.setNick(nick);
+	    	baseManager.save(appUser);
+	    	
+	    	SystemRole systemRole = baseManager.getEntity(SystemRole.class, 1);
+	    	List<AppUser> appUsers = systemRole.getAppUsers();
+	    	appUsers.add(appUser);
+	    	systemRole.setAppUsers(appUsers);
+	    	
+	    	baseManager.save(appUser);
+	    	baseManager.save(systemRole);
+	    	model.addAttribute("rezult", "Зарегестрировался");
+		}
     	
-    	SystemRole systemRole = baseManager.getEntity(SystemRole.class, 1);
-    	List<AppUser> appUsers = systemRole.getAppUsers();
-    	appUsers.add(appUser);
-    	systemRole.setAppUsers(appUsers);
-    	
-//    	List<SystemRole> systemRoles = appUser.getSystemRoles();
-//    	systemRoles.add(systemRole);
-    	
-    	baseManager.save(appUser);
-    	baseManager.save(systemRole);
-    	model.addAttribute("rezult", "Зарегестрировался");
         return "rezult";
     }
     

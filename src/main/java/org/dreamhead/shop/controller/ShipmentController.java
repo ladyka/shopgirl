@@ -1,12 +1,14 @@
-package org.dreamhead.shop;
+package org.dreamhead.shop.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.dreamhead.shop.db.BaseManager;
+import org.dreamhead.shop.MyPrice;
 import org.dreamhead.shop.db.BaseRequest;
+import org.dreamhead.shop.entity.AppUser;
 import org.dreamhead.shop.entity.Category;
 import org.dreamhead.shop.entity.Price;
 import org.dreamhead.shop.entity.Shipment;
@@ -26,7 +28,7 @@ public class ShipmentController {
 	BaseRequest baseRequest;
 	
 	@Autowired
-	BaseManager baseManager;
+	ShipmentService shipmentService;
 	
 	private Log logger = LogFactory.getLog(getClass());
 	
@@ -35,7 +37,7 @@ public class ShipmentController {
 			Model model,
 			@PathVariable(value = "id") int id
 		) {
-		Shipment shipment = baseManager.getEntity(Shipment.class, id);
+		Shipment shipment = baseRequest.getEntity(Shipment.class, id);
 		model.addAttribute("shipment", shipment);
 		
 		model.addAttribute("shipmentName", shipment.getName());
@@ -54,12 +56,21 @@ public class ShipmentController {
 	
 	@RequestMapping(value = "shipmentaddpage", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	public String shipmentaddpage(
-			Model model
+			Model model,
+			Principal principal
 		) {
+		model.addAttribute("allowToAddNewShipment", shipmentService.canEditShipment(principal.getName()));
+		try {
+			AppUser appUser = baseRequest.getAppUserFromEmail(principal.getName());
+			model.addAttribute("user", true);
+			model.addAttribute("appUserName", appUser.getNick());
+		} catch (NullPointerException exception) {
+			model.addAttribute("guest", true);
+		}
 		return "addnewShipment";
 	}
 	
-	@RequestMapping(value = "shipmentadd", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	@RequestMapping(value = "shipmentadd", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	public String shipmentadd(
 			Model model,
 			int id,
@@ -75,13 +86,13 @@ public class ShipmentController {
 		if (id == 0) {
 			shipment = new Shipment(); 
 		} else {
-			shipment = baseManager.getEntity(Shipment.class, id);
+			shipment = baseRequest.getEntity(Shipment.class, id);
 		}
 		shipment.setCategory(new Category(catalogid));
 		shipment.setImageURI(imageURI);
 		shipment.setName(name);
 		
-		baseManager.saveOrUpdate(shipment);
+		baseRequest.saveOrUpdate(shipment);
 		model.addAttribute("rezult", "Выполнено успешно");
 		return "rezult";
 	}
