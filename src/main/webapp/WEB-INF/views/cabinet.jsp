@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Добавление товара</title>
+<title>Личный кабинет</title>
 <style>
 div {
 	border: 1px solid black; /* Параметры рамки */
@@ -56,34 +56,7 @@ div {
 			<a href="/store/cabinet">Личный кабинет</a>. <a href="/store/cart">Корзина</a>
 			<a href="/store/logout">Выйти</a>
 <br><br>
-			<c:if test="${allowToAddNewShipment}">
-				<form method="POST" action="/store/shipmentEdit">
-					<input type="hidden" name="id" value="<c:out value="${shipmentId}"/>" /> 
-					<br>Имя товара<br>
-					<input size="100" type="text" name="name" /> 
-					<br>Ссылка на картинку<br>
-					<input size="100"  type="text" name="imageURI" /> 
-					<br>Описание товара <br>
-					<textarea accesskey="m" rows="4" cols="48" id="mes-inp" name="description"></textarea> 
-					<br>Категория<br>
-					<select multiple name="catalogid">
-						<c:forEach var="category" items="${categories}">
-							<option value="<c:out value="${category.id}"/>"><c:out
-									value="${category.nameCategory}" /></option>
-						</c:forEach>
-					</select>
-					<br>Цена<br>
-					<input size="100"  type="text" name="price" /> 
-					
-					
-					<br>Кол-во товара на складе<br>
-					<input size="100"  type="text" name="count" />
-					
-					<input alt="Add" type="submit" />
-
-				</form>
-
-			</c:if>
+			
 
 
 		</c:if>

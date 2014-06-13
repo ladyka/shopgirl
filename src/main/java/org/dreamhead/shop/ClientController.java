@@ -52,4 +52,10 @@ public class ClientController {
     	}
         return "rezult";
     }
+    
+    
+    @RequestMapping(value = "cabinet")
+    public String cabinet(Model model) {
+        return "cabinet";
+    }
 }

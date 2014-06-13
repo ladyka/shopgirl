@@ -47,8 +47,9 @@ public class Shop implements Serializable {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public Shop setId(int id) {
 		this.id = id;
+		return this;
 	}
 
 	public String getDescription() {

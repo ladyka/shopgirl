@@ -12,6 +12,7 @@ import org.dreamhead.shop.entity.AppUser;
 import org.dreamhead.shop.entity.Category;
 import org.dreamhead.shop.entity.Price;
 import org.dreamhead.shop.entity.Shipment;
+import org.dreamhead.shop.entity.Shop;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,18 +60,23 @@ public class ShipmentController {
 			Model model,
 			Principal principal
 		) {
-		model.addAttribute("allowToAddNewShipment", shipmentService.canEditShipment(principal.getName()));
 		try {
 			AppUser appUser = baseRequest.getAppUserFromEmail(principal.getName());
 			model.addAttribute("user", true);
 			model.addAttribute("appUserName", appUser.getNick());
+			model.addAttribute("allowToAddNewShipment", shipmentService.canEditShipment(principal.getName()));
+
+			List<Category> categories = baseRequest.getCategories();
+			model.addAttribute("categories", categories );
+			model.addAttribute("shipmentId",0);
+			
 		} catch (NullPointerException exception) {
 			model.addAttribute("guest", true);
 		}
 		return "addnewShipment";
 	}
 	
-	@RequestMapping(value = "shipmentadd", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+	@RequestMapping(value = "shipmentEdit", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	public String shipmentadd(
 			Model model,
 			int id,
@@ -80,7 +86,9 @@ public class ShipmentController {
 			String imageURI,
 
 			String name,
-			int catalogid
+			int catalogid,
+			int price,
+			int count
 		) {
 		Shipment shipment = null;
 		if (id == 0) {
@@ -88,11 +96,24 @@ public class ShipmentController {
 		} else {
 			shipment = baseRequest.getEntity(Shipment.class, id);
 		}
+		shipment.setDescription(description);
 		shipment.setCategory(new Category(catalogid));
 		shipment.setImageURI(imageURI);
 		shipment.setName(name);
 		
 		baseRequest.saveOrUpdate(shipment);
+		
+		Price myPrice = new Price();
+		
+		myPrice.setCount(count);
+		myPrice.setPrice(price);
+		myPrice.setShipment(shipment);
+		myPrice.setShop(new Shop().setId(1));
+		
+		baseRequest.saveOrUpdate(myPrice);
+		
+		logger.info("ADD : \n" + shipment.toString() + "\n" + myPrice.toString());
+		
 		model.addAttribute("rezult", "Выполнено успешно");
 		return "rezult";
 	}

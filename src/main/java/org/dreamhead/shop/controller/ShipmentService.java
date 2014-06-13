@@ -18,16 +18,21 @@ public class ShipmentService {
 	BaseRequest baseRequest;
 	
 	public boolean canEditShipment(String email) {
-		AppUser appUser = baseRequest.getAppUserFromEmail(email);
-		List<SystemRole> systemRoles = appUser.getSystemRoles();
-		for (SystemRole systemRole : systemRoles) {
-			if ( 
-					(systemRole.getId() == SystemRole.MANAGER)  
-					|| (systemRole.getId() == SystemRole.ADMIN)
-				) {
-				return true;
+		try {
+			AppUser appUser = baseRequest.getAppUserFromEmail(email);
+			List<SystemRole> systemRoles = appUser.getSystemRoles();
+			for (SystemRole systemRole : systemRoles) {
+				if ( 
+						(systemRole.getId() == SystemRole.MANAGER)  
+						|| (systemRole.getId() == SystemRole.ADMIN)
+					) {
+					return true;
+				}
 			}
+		}catch (Exception ex) {
+			ex.printStackTrace();
 		}
+		
 		return false;
 	}
 
