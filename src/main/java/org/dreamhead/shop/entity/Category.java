@@ -1,7 +1,10 @@
 package org.dreamhead.shop.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -59,6 +62,9 @@ public class Category implements Serializable {
 	}
 
 	public List<Shipment> getShipments() {
+		if (this.shipments == null) {
+			return new ArrayList<Shipment>();
+		}
 		return this.shipments;
 	}
 

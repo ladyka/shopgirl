@@ -32,11 +32,6 @@ public class BaseRequest {
 		return category.getShipments();
 	}
 
-	public Category getCategory(int CategoryId) {
-		Category category = baseKernel.getEntity(Category.class, CategoryId);
-		return category;
-	}
-
 	@SuppressWarnings("unchecked")
 	public List<Shipment> searchShipments(String searchquery) {
 		Criteria criteria = baseKernel.getCurrentSession().createCriteria(Shipment.class);

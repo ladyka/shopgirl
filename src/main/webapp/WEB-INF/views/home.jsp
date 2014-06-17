@@ -65,12 +65,18 @@ div {
 			<td>Имя</td>
 			<td>Описание</td>
 			<td>Ссылка на каталог</td>
+			<c:if test="${canEditCategories}">
+				<td>Ссылка на редактирование категории</td>
+			</c:if>
 		</tr>
 		<c:forEach var="category" items="${categories}">
 			<tr>
 				<td><c:out value="${category.nameCategory}" /></td>
 				<td><c:out value="${category.description}" /></td>
 				<td><a href="category/<c:out value="${category.id}"/>">Перейти</a>
+				<c:if test="${canEditCategories}">
+					<td><a href="category/edit/<c:out value="${category.id}"/>">Изменить</a>
+				</c:if>
 				</td>
 			</tr>
 		</c:forEach>

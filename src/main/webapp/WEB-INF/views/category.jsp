@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title><c:out value="${categoryName}"/></title>
+<title><c:out value="${nameCategory}"/></title>
 <style>
    div {
     border: 1px solid black; /* Параметры рамки */
@@ -31,7 +31,7 @@
       context.font = '30pt Calibri';
       context.textAlign = 'center';
       context.fillStyle = 'blue';
-      context.fillText('DREAMHEAD.RU', x, y);
+      context.fillText('DREAMHEAD.RU <c:out value="${nameCategory}"/>', x, y);
     </script>
     </a>
 <p>
@@ -48,31 +48,26 @@
 </c:if>
 </p>
 
-<h1><c:out value="${categoryName}"/></h1>
-<h3><c:out value="${description}"/></h3>
-	<table>
-		<tr> 
-			<td>
-				Картинка
-			</td>
-			<td>
-				Имя
-			</td>
-			<td>
-				Описание
-			</td>		
-			<td>
-				Ссылка на каталог
-			</td>			
-		</tr>
-		 <c:forEach var="shipment" items="${shipments}">
-			<tr>
-				<td><img src="<c:out value="${shipment.imageURI}"/>" width="189" /></td>
-				<td><c:out value="${shipment.name}"/></td>
-				<td><c:out value="${shipment.description}"/></td>
-				<td><a href="../shipment/<c:out value="${shipment.id}"/>" >Перейти</a></td>
-			</tr> 
-		 </c:forEach> 
-	</table>
+
+<c:if test="${canEdit}"> 
+
+
+<div id="center">
+<h1><c:out value="${nameCategory}"/></h1>
+</div>
+<form action="/store/category/edit/<c:out value="${id}" />" method="POST">
+<input type="hidden" name="id" value="<c:out value="${id}"/>" />
+
+Имя категории<br>
+<input size="100" type="text" name="nameCategory" value="<c:out value="${nameCategory}"/>" />
+Описание категории
+<input size="100" type="text" name="description" value="<c:out value="${description}"/>" />
+
+Сохранить
+<input alt="Add" type="submit" />
+
+</form>
+
+</c:if>
 </body>
 </html>

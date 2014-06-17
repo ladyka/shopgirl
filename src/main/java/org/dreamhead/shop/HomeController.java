@@ -40,6 +40,12 @@ public class HomeController {
 			model.addAttribute("user", true);
 			model.addAttribute("guest", false);
 			model.addAttribute("appUserName", appUser.getNick());
+
+			if ( (appUser.getRole() == AppUser.ADMIN) || (appUser.getRole() == AppUser.MANAGER) ) {
+				model.addAttribute("canEditCategories",true);
+			} else {
+				model.addAttribute("canEditCategories",false);
+			}
 		} catch (NullPointerException exception) {
 			model.addAttribute("guest", true);
 			model.addAttribute("user", false);
