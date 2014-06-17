@@ -11,6 +11,5 @@
 		<mapping class="org.dreamhead.shop.entity.Repotr" />
 		<mapping class="org.dreamhead.shop.entity.Shipment" />
 		<mapping class="org.dreamhead.shop.entity.Shop" />
-		<mapping class="org.dreamhead.shop.entity.SystemRole" />
 	</session-factory>
 </hibernate-configuration>

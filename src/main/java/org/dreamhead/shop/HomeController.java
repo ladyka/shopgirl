@@ -17,7 +17,6 @@ import org.dreamhead.shop.db.BaseManager;
 import org.dreamhead.shop.db.BaseRequest;
 import org.dreamhead.shop.entity.AppUser;
 import org.dreamhead.shop.entity.Category;
-import org.dreamhead.shop.entity.SystemRole;
 
 /**
  * Handles requests for the application home page.
@@ -101,15 +100,8 @@ public class HomeController {
 	    	appUser.setPassword(password);
 	    	appUser.setPhone(phone);
 	    	appUser.setNick(nick);
+	    	appUser.setRole(AppUser.USER);
 	    	baseManager.save(appUser);
-	    	
-	    	SystemRole systemRole = baseManager.getEntity(SystemRole.class, 1);
-	    	List<AppUser> appUsers = systemRole.getAppUsers();
-	    	appUsers.add(appUser);
-	    	systemRole.setAppUsers(appUsers);
-	    	
-	    	baseManager.save(appUser);
-	    	baseManager.save(systemRole);
 	    	model.addAttribute("rezult", "Зарегестрировался");
 		}
     	

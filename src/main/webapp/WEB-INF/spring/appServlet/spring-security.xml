@@ -23,8 +23,7 @@
         <intercept-url pattern="/register" access="permitAll"/>
         <intercept-url pattern="/registerpage" access="permitAll"/>
 
-        <intercept-url pattern="/cart/**" access="hasRole('ROLE_USER')"/>
-        
+        <intercept-url pattern="/cart/**" access="hasAnyRole('ADMIN','MANAGER','USER')"/>
         
         <form-login login-page="/login" authentication-failure-url="/login?error=true" default-target-url="/"/>
         <logout logout-url="/logout" logout-success-url="/" invalidate-session="true" delete-cookies="true" />

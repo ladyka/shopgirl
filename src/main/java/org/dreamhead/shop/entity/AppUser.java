@@ -1,7 +1,9 @@
 package org.dreamhead.shop.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.util.List;
 
 
@@ -12,7 +14,12 @@ import java.util.List;
 @Entity
 @NamedQuery(name="AppUser.findAll", query="SELECT a FROM AppUser a")
 public class AppUser implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 649294026152412756L;
+	public static final int ADMIN = 1;
+	public static final int MANAGER = 2;
+	public static final int USER = 3;	
+	public static final int GUEST = 4;
+	public static final int BAN = 4;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -28,14 +35,12 @@ public class AppUser implements Serializable {
 	private String password;
 
 	private String phone;
+	
+	private int role;
 
 	//bi-directional many-to-many association to Shop
 	@ManyToMany(mappedBy="appUsers")
 	private List<Shop> shops;
-
-	//bi-directional many-to-many association to SystemRole
-	@ManyToMany(mappedBy="appUsers")
-	private List<SystemRole> systemRoles;
 
 	//bi-directional many-to-one association to Oder
 	@OneToMany(mappedBy="appUser")
@@ -104,14 +109,6 @@ public class AppUser implements Serializable {
 		this.shops = shops;
 	}
 
-	public List<SystemRole> getSystemRoles() {
-		return this.systemRoles;
-	}
-
-	public void setSystemRoles(List<SystemRole> systemRoles) {
-		this.systemRoles = systemRoles;
-	}
-
 	public List<Oder> getOders() {
 		return this.oders;
 	}
@@ -154,6 +151,32 @@ public class AppUser implements Serializable {
 		repotr.setAppUser(null);
 
 		return repotr;
+	}
+
+	public int getRole() {
+		return role;
+	}
+
+	public void setRole(int role) {
+		this.role = role;
+	}
+
+	public String getNameRole() {
+		switch (getRole()) {
+		case AppUser.ADMIN:
+			return "ADMIN";
+
+		case AppUser.MANAGER:
+			return "MANAGER";
+
+		case AppUser.USER:
+			return "USER";
+			
+		case AppUser.BAN:
+			return "BAN";
+		default:
+			return "GUEST";
+		}
 	}
 
 }

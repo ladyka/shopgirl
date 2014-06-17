@@ -84,4 +84,8 @@ public class BaseRequest {
 		return baseKernel.save(object);
 	}
 
+    public <T> List<T> getListEntity(Class<T> entityClass) {
+        return baseKernel.getListEntity(entityClass);
+    }
+
 }

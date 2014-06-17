@@ -55,7 +55,11 @@ div {
 		Привет. ${appUserName}.<br>
 			<a href="/store/cabinet">Личный кабинет</a>. <a href="/store/cart">Корзина</a>
 			<a href="/store/logout">Выйти</a>
-<br><br>
+		<br><a href="shipmentaddpage" >Добавить товар</a>
+		<br><a href="clientmain" >Операции над пользователями</a>
+		<br><a href="search" >Поискать</a>
+		<br><a href="" >Добавить товар</a>
+
 			
 
 

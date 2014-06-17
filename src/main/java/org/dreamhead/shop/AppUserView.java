@@ -1,22 +1,13 @@
 package org.dreamhead.shop;
 
 import java.io.Serializable;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 
 import org.dreamhead.shop.entity.AppUser;
-import org.dreamhead.shop.entity.Oder;
-import org.dreamhead.shop.entity.Repotr;
-import org.dreamhead.shop.entity.Shop;
-import org.dreamhead.shop.entity.SystemRole;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class AppUserView  implements Serializable {
-	
+	private static final long serialVersionUID = 81673389645L;
 	private int id;
 
 	private String email;
@@ -32,22 +23,10 @@ public class AppUserView  implements Serializable {
 		setEmail(appUser.getEmail());
 		setNick(appUser.getNick());
 		setPhone(appUser.getPhone());
-		try {
-			for (SystemRole systemRole : appUser.getSystemRoles()) {
-				if (systemRole.getId() == 1) {
-					setStatus("Пользователь");
-					break;
-				}
-			}
-			if (status == null) {
-				setStatus("Забанен");
-			}
-		} catch (Exception ex) {
-			setStatus("Забанен");
-		}
+		setStatus(appUser.getNameRole());
 	}
 
-	private static final long serialVersionUID = 81673389645L;
+	
 
 	public int getId() {
 		return id;
