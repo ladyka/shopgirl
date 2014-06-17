@@ -37,6 +37,9 @@ public class AppUser implements Serializable {
 	private String phone;
 	
 	private int role;
+	
+	private String vktocken;
+	private String vkid;
 
 	//bi-directional many-to-many association to Shop
 	@ManyToMany(mappedBy="appUsers")
@@ -177,6 +180,22 @@ public class AppUser implements Serializable {
 		default:
 			return "GUEST";
 		}
+	}
+
+	public String getVktocken() {
+		return vktocken;
+	}
+
+	public void setVktocken(String vktocken) {
+		this.vktocken = vktocken;
+	}
+
+	public String getVkid() {
+		return vkid;
+	}
+
+	public void setVkid(String vkid) {
+		this.vkid = vkid;
 	}
 
 }

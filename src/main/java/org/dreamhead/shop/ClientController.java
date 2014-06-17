@@ -61,6 +61,8 @@ public class ClientController {
 			model.addAttribute("user", true);
 			model.addAttribute("guest", false);
 			model.addAttribute("appUserName", appUser.getNick());
+			model.addAttribute("redirect_uri", VkController.uriWebApp);
+			model.addAttribute("client_id", VkController.appID);
 		} catch (NullPointerException exception) {
 			model.addAttribute("guest", true);
 			model.addAttribute("user", false);
