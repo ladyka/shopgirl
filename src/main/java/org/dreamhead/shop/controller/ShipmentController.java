@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dreamhead.shop.MyPrice;
+import org.dreamhead.shop.VkAPI;
 import org.dreamhead.shop.db.BaseRequest;
 import org.dreamhead.shop.entity.AppUser;
 import org.dreamhead.shop.entity.Category;
@@ -115,6 +116,23 @@ public class ShipmentController {
 		logger.info("ADD : \n" + shipment.toString() + "\n" + myPrice.toString());
 		
 		model.addAttribute("rezult", "Выполнено успешно");
+		return "rezult";
+	}
+	
+	@RequestMapping(value = "shipment/vk/post/{id}")
+	public String postShipmentWallVk(Principal principal,Model model,@PathVariable(value = "id") int id) {
+		if (shipmentService.canEditShipment(principal.getName())) {
+			Shipment shipment = baseRequest.getEntity(Shipment.class, id);
+			shipment.getName();
+			shipment.getImageURI();
+			shipment.getDescription();
+			shipment.getPrices().get(0).getPrice();
+			AppUser appUser = baseRequest.getAppUserFromEmail(principal.getName());
+			String url = VkAPI.wallPost("-73028368", "HELLO " + System.nanoTime(), appUser.getVktocken(), appUser.getVkid());
+			model.addAttribute("rezult", "Готово, <a href=\" " + url  + "\" >смотри</a>" );
+		} {
+			model.addAttribute("rezult", "Нет прав для того, что б запостить.");
+		}
 		return "rezult";
 	}
 }

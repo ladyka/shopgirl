@@ -13,6 +13,8 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +23,7 @@ public class VkAPI {
 	private String access_token;
 	private String expires_in;
 	private String user_id;
-	private Logger logger = LoggerFactory.getLogger(getClass().getName());
+	public static Logger logger = LoggerFactory.getLogger("VkAPI");
 	
 	
 	String appID;
@@ -186,7 +188,7 @@ public class VkAPI {
     }
 
 	@SuppressWarnings("unchecked")
-	private String getResponse(HttpPost httppost) {
+	private static String getResponse(HttpPost httppost) {
         HttpClient httpclient = new DefaultHttpClient();
         ResponseHandler<String> handler = new BasicResponseHandler();        
         try {
@@ -225,5 +227,55 @@ public class VkAPI {
 		uriBuilder.setScheme("https");
 		uriBuilder.setHost("api.vk.com");
 		return uriBuilder;
+	}
+
+	/**
+	 * 
+	 * @param owner_id
+	 * @param message
+	 * v 5.21
+	 * @param access_token
+	 * @param VkID
+	 * @return
+	 * @throws URISyntaxException
+	 */
+	public static String wallPost(
+			String owner_id,
+			String message,
+			String access_token,
+			String VkID
+			) {
+		//https:///method/'''METHOD_NAME'''?'''PARAMETERS'''&access_token='''ACCESS_TOKEN'''
+		URIBuilder uriBuilder = new URIBuilder();
+		uriBuilder.setScheme("https");
+		uriBuilder.setHost("api.vk.com/");
+		uriBuilder.setPath("method/wall.post");
+		uriBuilder.setParameter("access_token",access_token);
+		uriBuilder.setParameter("from_group",VkID);
+		uriBuilder.setParameter("message",message);
+		uriBuilder.setParameter("v","5.21");
+//		uriBuilder.setParameter("owner_id",);
+//		uriBuilder.setParameter("owner_id",);
+		
+		
+		HttpPost httpPost = null;
+		try {
+			httpPost = new HttpPost(uriBuilder.build());
+		} catch (URISyntaxException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		String response = getResponse(httpPost);
+		logger.info(response);
+		String post_id = "fail";
+		try {
+			post_id = String.valueOf(( (JSONObject) new JSONParser().parse(
+					String.valueOf(( (JSONObject) new JSONParser().parse(response) ).get("response"))
+					) ).get("post_id"));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return post_id ;
 	}
 }
