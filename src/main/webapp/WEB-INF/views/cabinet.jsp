@@ -58,7 +58,6 @@ div {
 		<br><a href="shipmentaddpage" >Добавить товар</a>
 		<br><a href="clientmain" >Операции над пользователями</a>
 		<br><a href="search" >Поискать</a>
-		<br><a href="" >Добавить товар</a>
 		<br><a href="https://oauth.vk.com/authorize?client_id=<c:out value="${client_id}" />&scope=notify,friends,photos,audio,video,docs,notes,pages,status,wall,groups,notifications,stats,offline&redirect_uri=<c:out value="${redirect_uri}" />&response_type=code&v=5.21" >Подключить Вконтакте</a>
 
 			

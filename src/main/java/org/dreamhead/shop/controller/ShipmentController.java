@@ -7,13 +7,13 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dreamhead.shop.MyPrice;
-import org.dreamhead.shop.VkAPI;
 import org.dreamhead.shop.db.BaseRequest;
 import org.dreamhead.shop.entity.AppUser;
 import org.dreamhead.shop.entity.Category;
 import org.dreamhead.shop.entity.Price;
 import org.dreamhead.shop.entity.Shipment;
 import org.dreamhead.shop.entity.Shop;
+import org.dreamhead.vk.VkAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -123,12 +123,14 @@ public class ShipmentController {
 	public String postShipmentWallVk(Principal principal,Model model,@PathVariable(value = "id") int id) {
 		if (shipmentService.canEditShipment(principal.getName())) {
 			Shipment shipment = baseRequest.getEntity(Shipment.class, id);
-			shipment.getName();
 			shipment.getImageURI();
-			shipment.getDescription();
-			shipment.getPrices().get(0).getPrice();
 			AppUser appUser = baseRequest.getAppUserFromEmail(principal.getName());
-			String url = VkAPI.wallPost("-73028368", "HELLO " + System.nanoTime(), appUser.getVktocken(), appUser.getVkid());
+			String url = VkAPI.wallPost("-73028368", 
+					shipment.getName() + " " + 
+					shipment.getDescription() +
+					" PRICE " + 
+					shipment.getPrices().get(0).getPrice()
+					, appUser.getVktocken(), appUser.getVkid());
 			model.addAttribute("rezult", "Готово, <a href=\" " + url  + "\" >смотри</a>" );
 		} {
 			model.addAttribute("rezult", "Нет прав для того, что б запостить.");

@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.dreamhead.shop.db.BaseRequest;
 import org.dreamhead.shop.entity.AppUser;
+import org.dreamhead.vk.VkApiFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,8 +62,8 @@ public class ClientController {
 			model.addAttribute("user", true);
 			model.addAttribute("guest", false);
 			model.addAttribute("appUserName", appUser.getNick());
-			model.addAttribute("redirect_uri", VkController.uriWebApp);
-			model.addAttribute("client_id", VkController.appID);
+			model.addAttribute("redirect_uri", VkApiFactory.standaloneAppDreamHead.getVkApiSettings().getUriWebApp());
+			model.addAttribute("client_id", VkApiFactory.standaloneAppDreamHead.getVkApiSettings().getAppID());
 		} catch (NullPointerException exception) {
 			model.addAttribute("guest", true);
 			model.addAttribute("user", false);

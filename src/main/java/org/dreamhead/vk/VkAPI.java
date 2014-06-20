@@ -1,4 +1,4 @@
-package org.dreamhead.shop;
+package org.dreamhead.vk;
 
 import java.io.IOException;
 import java.net.URI;
@@ -12,6 +12,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.dreamhead.shop.entity.AppUser;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -20,23 +21,14 @@ import org.slf4j.LoggerFactory;
 
 public class VkAPI {
 	
-	private String access_token;
-	private String expires_in;
-	private String user_id;
+	
 	public static Logger logger = LoggerFactory.getLogger("VkAPI");
+	private VkApiSettings appSettings;
 	
-	
-	String appID;
-	String appSecret;
-	String uriWebApp;
-	
-	
-	public VkAPI(String appID, String appSecret ,String uriWebApp) {
-		this.appID = appID;
-		this.appSecret = appSecret;
-		this.uriWebApp = uriWebApp;
+	public VkAPI(VkApiSettings appSettings) {
+		this.appSettings = appSettings;
 	}
-	
+
 	/**
 	 * v4.99
 	 * Для вызова этого метода Ваше приложение должно иметь следующие права: wall и friends.
@@ -82,8 +74,8 @@ public class VkAPI {
 			) {
 		URIBuilder uriBuilder = getDefaultURIBuilder();
 		uriBuilder.setPath("/method/newsfeed.get");
-		uriBuilder.setParameter("access_token",access_token);
-		uriBuilder.setParameter("user_id",user_id);
+		uriBuilder.setParameter("access_token",appSettings.getAccess_token());
+		uriBuilder.setParameter("user_id",appSettings.getUser_id());
 		
 		
 		if ((!filters.isEmpty()) || (filters != null)) {
@@ -127,14 +119,16 @@ public class VkAPI {
 	 */
 	public Boolean parseURI(String maybe) {
 		try {
-			access_token = maybe.substring(maybe.indexOf("access_token") + 13,
+			String access_token = maybe.substring(maybe.indexOf("access_token") + 13,
 					maybe.indexOf("&"));
 
 			int expires_in_start = maybe.indexOf("expires_in");
-			expires_in = maybe.substring(expires_in_start + 11,
+			String expires_in = maybe.substring(expires_in_start + 11,
 					maybe.indexOf("&", expires_in_start));
 
-			user_id = maybe.substring(maybe.indexOf("user_id") + 8, maybe.length());
+			String user_id = maybe.substring(maybe.indexOf("user_id") + 8, maybe.length());
+			
+			appSettings.setAuthData(access_token, expires_in, user_id);
 			return true;
 		} catch (Exception ex) {
 			logger.error(ex.getLocalizedMessage());
@@ -143,33 +137,6 @@ public class VkAPI {
 	}
 
 
-	
-	
-
-    
-	public String getAccess_token() {
-		return access_token;
-	}
-
-	public void setAccess_token(String access_token) {
-		this.access_token = access_token;
-	}
-
-	public String getExpires_in() {
-		return expires_in;
-	}
-
-	public void setExpires_in(String expires_in) {
-		this.expires_in = expires_in;
-	}
-
-	public String getUser_id() {
-		return user_id;
-	}
-
-	public void setUser_id(String user_id) {
-		this.user_id = user_id;
-	}
 
 	@SuppressWarnings({ "unchecked" })
 	private String getResponse(HttpGet httpget) {
@@ -202,25 +169,6 @@ public class VkAPI {
         	return jsonObject.toJSONString();
         }
     }
-
-	public String autorizeWebSite(String code) {
-		try {
-			URIBuilder uriBuilder = new URIBuilder();
-			uriBuilder.setScheme("https");
-			uriBuilder.setHost("oauth.vk.com/");
-			uriBuilder.setPath("access_token");
-			uriBuilder.setParameter("client_id",appID);
-			uriBuilder.setParameter("client_secret",appSecret);
-			uriBuilder.setParameter("code",code);
-			uriBuilder.setParameter("redirect_uri",uriWebApp);
-			URI a = uriBuilder.build();
-			logger.info("URI : "+  a.toString());
-			HttpPost httpPost = new HttpPost(a);
-			return getResponse(httpPost);
-		} catch (Exception ex) {
-			return ex.getLocalizedMessage();
-		}
-	}
 	
 	public static URIBuilder getDefaultURIBuilder() {
 		URIBuilder uriBuilder = new URIBuilder();
@@ -278,4 +226,54 @@ public class VkAPI {
 		}
 		return post_id ;
 	}
+
+	public void autorizeApp(String code) {
+		try {
+			URIBuilder uriBuilder = new URIBuilder();
+			uriBuilder.setScheme("https");
+			uriBuilder.setHost("oauth.vk.com/");
+			uriBuilder.setPath("access_token");
+			uriBuilder.setParameter("client_id",appSettings.getAppID());
+			uriBuilder.setParameter("client_secret",appSettings.getAppSecret());
+			uriBuilder.setParameter("code",code);
+			uriBuilder.setParameter("redirect_uri",getRedirect_uri());
+			URI a = uriBuilder.build();
+			logger.info("URI : "+  a.toString());
+			HttpPost httpPost = new HttpPost(a);
+			String response =  getResponse(httpPost);
+			
+			JSONParser jsonParser = new JSONParser();
+			JSONObject jsonObject = (JSONObject) jsonParser.parse(response);
+			String access_token = String.valueOf(jsonObject.get("access_token"));
+			String user_id = String.valueOf(jsonObject.get("user_id"));
+			String expires_in = String.valueOf(jsonObject.get("expires_in"));
+			appSettings.setAuthData(access_token, expires_in, user_id);
+		} catch (Exception ex) {
+			ex.getLocalizedMessage();
+		}
+		
+	}
+
+	public String getURIAUTH() {
+		return "https://oauth.vk.com/authorize?client_id=" + appSettings.getAppID() 
+				+ "&scope=notify,friends,photos,audio,video,docs,notes,pages,status,wall,groups,notifications,stats,offline&"
+				+ "redirect_uri=" + getRedirect_uri() 
+				+ "&response_type=code&v=5.21";
+	}
+	
+	public VkApiSettings getVkApiSettings() {
+		return appSettings;
+	}
+	
+	public String getRedirect_uri() {
+		if (appSettings.isStandalone()) {
+			return "https://oauth.vk.com/blank.html";
+		} else {
+			return appSettings.getUriWebApp();
+		}
+	}
+	
+	
+	
+	//  https://oauth.vk.com/authorize?client_id=3590186&scope=notify,friends,photos,audio,video,docs,notes,pages,status,wall,groups,notifications,stats,offline&redirect_uri=https://oauth.vk.com/blank.html&response_type=code&v=5.21
 }
