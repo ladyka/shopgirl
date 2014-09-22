@@ -15,13 +15,26 @@ public class Audio implements Serializable {
     public String url;
     public Long lyrics_id;
 
+    /**
+     * id: 307551282,
+owner_id: 203249956,
+artist: 'На Ямайку!',
+title: 'БЕЗ БИЛЕТА',
+duration: 180,
+url: 'https://psv4.vk.m...ZhcH4JCc87tHMtWm8',
+genre_id: 3
+     * @param o
+     * @return
+     * @throws NumberFormatException
+     * @throws JSONException
+     */
     public static Audio parse(JSONObject o) throws NumberFormatException, JSONException{
         Audio audio = new Audio();
-        audio.aid = Long.parseLong(o.getString("id"));
-        audio.owner_id = Long.parseLong(o.getString("owner_id"));
+        audio.aid = Long.valueOf(String.valueOf(o.get("id")));
+        audio.owner_id = Long.valueOf(String.valueOf(o.get("owner_id")));
         audio.artist = Api.unescape(o.optString("artist"));
         audio.title = Api.unescape(o.optString("title"));
-        audio.duration = Long.parseLong(o.getString("duration"));
+        audio.duration = Long.valueOf(String.valueOf(o.get("duration")));
         audio.url = o.optString("url", null);
         
         String tmp=o.optString("lyrics_id");

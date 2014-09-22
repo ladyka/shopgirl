@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.vurtatoo.vk.VkApi;
+import org.vurtatoo.vk.VkApiSettings;
 import org.vurtatoo.vk.VkAudioImplementation;
 import org.vurtatoo.vk.exception.KException;
 import org.vurtatoo.vk.utils.Utils;
@@ -2574,7 +2575,7 @@ public class Api {
     
     //Moveed methods
 
-    static VkApi vKapi = new VkApi();
+    static VkApi vKapi = new VkApi( new  VkApiSettings("4557449", "kxyj3gaLkfqkCHDWoFNq", "https://oauth.vk.com/blank.html", true).setAuthData("19ce7b1c58598c5011f3347ef0ae7eae2739810895ef957ca18978a7f61b2ea22d932257b7aff38541344", "0", "6704769"));
     @Moved
     <T> String arrayToString(Collection<T> items) {
         return vKapi.arrayToString(items);

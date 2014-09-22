@@ -21,11 +21,11 @@ public class VkApiSettings {
 		standalone = standaloneApp;
 	}
 	
-	public void setAuthData(String access_token, String expires_in, String user_id) {
+	public VkApiSettings setAuthData(String access_token, String expires_in, String user_id) {
 		this.access_token = access_token;
 		this.expires_in = expires_in;
 		this.user_id = user_id;
-				
+				return this;
 	}
 
 	public String getAppID() {

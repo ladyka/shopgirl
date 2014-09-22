@@ -7,6 +7,7 @@ import java.util.Collection;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.LoggerFactory;
 import org.vurtatoo.vk.api.Audio;
 import org.vurtatoo.vk.api.Params;
 import org.vurtatoo.vk.exception.KException;
@@ -15,12 +16,10 @@ public class VkAudioImplementation implements VkAudio {
 	
 	
 
-	private VkApi vkApi = new VkApi();
-	
-	private VkApiSettings apiSettings;
+	private VkApi vkApi;
 	
 	public VkAudioImplementation(VkApiSettings apiSettings) {
-		this.apiSettings = apiSettings;
+		vkApi = new VkApi(apiSettings);
 	}
 
 	@Override
@@ -31,7 +30,9 @@ public class VkAudioImplementation implements VkAudio {
         if(gid!=null)
             params.put("owner_id", -gid);
         params.put("audio_ids", vkApi.arrayToString(aids));//не документировано - возможно уже не работает - возможно нужно использовать audio.getById
-        params.put("album_id", album_id);
+        if (album_id != null) {
+        	params.put("album_id", album_id);        	
+        }
         vkApi.addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = vkApi.sendRequest(params);
         JSONObject response=root.optJSONObject("response");
@@ -164,8 +165,13 @@ public class VkAudioImplementation implements VkAudio {
         ArrayList<Audio> audios = new ArrayList<Audio>();
         if (array != null) {
             for(int i = 0; i<array.length(); ++i) { //get(0) is integer, it is audio count
-                JSONObject o = (JSONObject)array.get(i);
-                audios.add(Audio.parse(o));
+                JSONObject o = (JSONObject)array.get(i); 
+                try {
+                	audios.add(Audio.parse(o));
+                } catch (Exception ex) {
+                	LoggerFactory.getLogger("").error(ex.getLocalizedMessage());
+                }
+                
             }
         }
         return audios;

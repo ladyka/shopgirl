@@ -24,11 +24,16 @@ public class VkApi {
     public  final String BASE_URL="https://api.vk.com/method/";
     public  final String API_VERSION="5.5";
     
-     String access_token;
+    String access_token;
     String api_id;
     
     
     public  final String TAG="Kate.Api";
+    
+    public VkApi (VkApiSettings apiSettings) {
+    	access_token = apiSettings.getAccess_token();
+    	api_id = apiSettings.getAppID();
+    }
 
     
     //TODO: it's not faster, even slower on slow devices. Maybe we should add an option to disable it. It's only good for paid internet connection.

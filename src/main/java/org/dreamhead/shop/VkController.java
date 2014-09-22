@@ -1,22 +1,26 @@
 package org.dreamhead.shop;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import org.dreamhead.shop.db.BaseRequest;
 import org.dreamhead.shop.entity.AppUser;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.vurtatoo.vk.VkAPIDEp;
 import org.vurtatoo.vk.VkApiFactory;
 import org.vurtatoo.vk.VkApiSettings;
+import org.vurtatoo.vk.VkAudio;
+import org.vurtatoo.vk.VkAudioImplementation;
+import org.vurtatoo.vk.api.Audio;
+import org.vurtatoo.vk.exception.KException;
 
 @Controller
 public class VkController {
@@ -47,7 +51,18 @@ public class VkController {
     	}
     	return "rezult";
     }
-    
+    @RequestMapping(value="vkaudio")
+    public @ResponseBody List<Audio> getAudios() throws JSONException, IOException, KException {
+    	VkAudio vkAudio = new VkAudioImplementation(new  VkApiSettings("4557449", "kxyj3gaLkfqkCHDWoFNq", "https://oauth.vk.com/blank.html", true).setAuthData("19ce7b1c58598c5011f3347ef0ae7eae2739810895ef957ca18978a7f61b2ea22d932257b7aff38541344", "0", "6704769"));
+    	
+    	Long uid = 203249956L;
+		Long gid = null; 
+		Long album_id = null;
+		Collection<Long> aids = new ArrayList<Long>();
+		String captcha_key = "";
+		String captcha_sid = "";
+		return vkAudio.getAudio(uid, gid, album_id, aids, captcha_key, captcha_sid);
+    }
     
 
 }
