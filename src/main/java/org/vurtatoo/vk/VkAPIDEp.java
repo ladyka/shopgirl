@@ -1,4 +1,4 @@
-package org.dreamhead.vk;
+package org.vurtatoo.vk;
 
 import java.io.IOException;
 import java.net.URI;
@@ -19,13 +19,13 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class VkAPI {
+public class VkAPIDEp {
 	
 	
 	public static Logger logger = LoggerFactory.getLogger("VkAPI");
 	private VkApiSettings appSettings;
 	
-	public VkAPI(VkApiSettings appSettings) {
+	public VkAPIDEp(VkApiSettings appSettings) {
 		this.appSettings = appSettings;
 	}
 

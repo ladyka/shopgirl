@@ -1,4 +1,4 @@
-package org.dreamhead.vk;
+package org.vurtatoo.vk;
 
 
 public class VkApiSettings {

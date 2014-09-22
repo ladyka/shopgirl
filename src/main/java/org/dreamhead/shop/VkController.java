@@ -8,15 +8,15 @@ import java.util.Map;
 
 import org.dreamhead.shop.db.BaseRequest;
 import org.dreamhead.shop.entity.AppUser;
-import org.dreamhead.vk.VkAPI;
-import org.dreamhead.vk.VkApiFactory;
-import org.dreamhead.vk.VkApiSettings;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.vurtatoo.vk.VkAPIDEp;
+import org.vurtatoo.vk.VkApiFactory;
+import org.vurtatoo.vk.VkApiSettings;
 
 @Controller
 public class VkController {
@@ -33,7 +33,7 @@ public class VkController {
     public String vk(Model model, String code,Principal principal) {
     	try {
     		
-    		VkAPI vkAPI = VkApiFactory.standaloneAppDreamHead;
+    		VkAPIDEp vkAPI = VkApiFactory.standaloneAppDreamHead;
     		vkAPI.autorizeApp(code);
 			AppUser appUser = baseRequest.getAppUserFromEmail(principal.getName());
 			VkApiSettings vkApiSettings = vkAPI.getVkApiSettings();

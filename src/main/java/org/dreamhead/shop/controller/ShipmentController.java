@@ -13,7 +13,6 @@ import org.dreamhead.shop.entity.Category;
 import org.dreamhead.shop.entity.Price;
 import org.dreamhead.shop.entity.Shipment;
 import org.dreamhead.shop.entity.Shop;
-import org.dreamhead.vk.VkAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.vurtatoo.vk.VkAPIDEp;
 
 @Transactional
 @Controller
@@ -125,7 +125,7 @@ public class ShipmentController {
 			Shipment shipment = baseRequest.getEntity(Shipment.class, id);
 			shipment.getImageURI();
 			AppUser appUser = baseRequest.getAppUserFromEmail(principal.getName());
-			String url = VkAPI.wallPost("-73028368", 
+			String url = VkAPIDEp.wallPost("-73028368", 
 					shipment.getName() + " " + 
 					shipment.getDescription() +
 					" PRICE " + 
